@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Send to Taskforce engine</title>
+	
+		<script type="text/javascript" src="jquery.js"></script>
+		<script type="text/javascript">
+			
+			chrome.browserAction.onClicked.addListener(function(tab) {
+		url = tab.url;
+		username = localStorage.getItem("tf_username");
+		password = localStorage.getItem("tf_apikey");
+		list_id = localStorage.getItem("tf_list");
+		
+		if (list_id == undefined) {
+			var options = { 'url': 'options.html' }; chrome.tabs.create(options);
+			return;
+		}
+		
+		if (username == undefined || password == undefined) {
+			var options = { 'url': 'options.html' }; chrome.tabs.create(options);
+		} else {
+			var data = {
+				'name': url,
+				'list_id': list_id
+			}
+			request_url = "https://" + username + ":" + password + "@www.taskforceapp.com/api/v1/tasks.json";
+			$.post(request_url, data, function(data, textStatus, jqXHR) {
+				alert("The page has been added to your Taskforce task list.");
+			}).error(function(jqXHR, textStatus, errorThrown) { if (jqXHR.status == "401") { var options = { 'url': 'options.html' }; chrome.tabs.create(options); } else { alert("An unknown error occurred. Please try again later, and check your options."); } });
+		}
+});
+			
+		</script>
+	</head>
+	
+	<body>
+	
+	</body>
+</html>

@@ -1,0 +1,123 @@
+<html>
+<head><title>Send to Taskforce Options</title>
+		<style type="text/css">
+		body { margin: 0; font-family: sans-serif; }
+		#header { background-color: #363A48; width: 100%; padding: 8px; color: #FFF; font-weight: bold; font-size: 24px; margin-bottom: 20px; }
+		#container { width: 95%; margin: auto; line-height: 2em; }
+		span.notice { font-weight: bold; color: red; }
+		</style>
+	</head>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+function getUrlVars() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		vars[key] = value;
+	});
+	return vars;
+}
+
+var notice = getUrlVars()["notice"];
+if (notice == "list") {
+	$("span.notice").text("Please select a list to save tasks into.");
+	alert(notice);
+}
+
+
+// Saves options to localStorage.
+function save_options() {
+  var select = document.getElementById("tf_list");
+if (select.children[select.selectedIndex] != undefined) {
+  var id_to_save = select.children[select.selectedIndex].value;
+}
+if (document.getElementById("tf_username").value == localStorage["tf_username"] && document.getElementById("tf_apikey").value == localStorage["tf_apikey"]) {
+  localStorage["tf_list"] = id_to_save; 
+} else {
+	localStorage.removeItem("tf_list");
+}
+	localStorage["tf_username"] = document.getElementById("tf_username").value;
+	localStorage["tf_apikey"] = document.getElementById("tf_apikey").value;
+
+  // Update status to let user know options were saved.
+ $("span.notice").text("Your username and API key have been saved. You may now need to select a task list to save your tasks into.");
+restore_options();
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+$("#tf_list").empty();
+  var username = localStorage["tf_username"];
+  var password = localStorage["tf_apikey"];
+  var list_id = localStorage["tf_list"];
+  if (!username && !password) {
+    return;
+  }
+  $("#tf_username").val(username);
+	$("#tf_apikey").val(password);
+	
+	if (username != undefined && password != undefined) {
+	$.getJSON("https://" + username + ":" + password + "@www.taskforceapp.com/api/v1/lists.json", null, function(data, textStatus, jqXHR) {
+		for (var i = 0; i < data.lists.length; i++) {
+			var list = data.lists[i];
+			var id = list.id;
+			var name = list.name;
+			$("#tf_list").append($("<option></option>").attr("value", id).text(name));
+		}
+		selectCorrectList();
+	});
+}
+	
+
+}
+
+function selectCorrectList() { 
+	var list_id = localStorage["tf_list"];
+ var select = document.getElementById("tf_list");
+  for (var i = 0; i < select.children.length; i++) {
+    var child = select.children[i];
+    if (child.value == list_id) {
+      child.selected = "true";
+      break;
+    }
+  }
+}
+
+function clear_account() {
+	localStorage.removeItem("tf_list");
+	localStorage.removeItem("tf_username");
+	localStorage.removeItem("tf_apikey");
+	
+	$("#tf_username").val("");
+	$("#tf_apikey").val("");
+	$("#tf_list").empty();
+	$("span.notice").text("Your Taskforce login details have been cleared.");
+}
+
+</script>
+
+<body onload="restore_options()">
+	
+<div id="header">Send to Taskforce Settings</div>
+
+<div id="container">
+	<span style="font-size: 14px; line-height: 1.2em;">Set your username and API key here so that we can add items to your Taskforce account for you directly from your browser. All your details are kept secure and your details are sent to no-one but Taskforce. If your username or API key is incorrect, you may see a "login" box - just click cancel. You will also see the same if they are blank.</span><br />
+	<span class="notice"></span>
+	<br />
+Username:
+<input type="text" id="tf_username" />
+<br />
+API Key: <input type="password" id="tf_apikey" /> (click <a href="http://www.taskforceapp.com/account" target="_blank">here</a>, log in and then click "API", then copy your key into the field here)
+<br />
+Task list:
+<select id="tf_list">
+
+</select>
+
+<br><br />
+<button onclick="save_options()">Save</button><br />
+<button onclick="clear_account()">Delete my details</button>
+<br /><br />
+<small><i>This extension is created by Tim Rogers of Tyrant Inc, the creators of Taskforce. All rights reserved.</i></small>
+</div>
+</body>
+</html>
