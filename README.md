@@ -1,10 +1,13 @@
 Send to Taskforce Chrome Extension
 ==================================
-**Version 1.1**
+**Version 1.2**
 
 "Send your current page to the Taskforce task management app to remind you to look at it later, just as you can with an email. [Taskforce] (http://www.taskforceapp.com) is an addon for Gmail which builds high-quality email integrated task management into your workflow - it lets you convert the emails in your inbox into tasks, creating a whole new and helpful paradigm for managing your time.
 
-Now, with Send to Taskforce for Chrome, you can do the same with web pages - take the web page you're currently viewing and add it to your Taskforce to-do list. Simply go onto the options page, set your username, password and list and then you can add tasks with a click of a button - simple!"
+Now, with Send to Taskforce for Chrome, you can do the same with web pages - take the web page you're currently viewing and add it to your Taskforce to-do list. Simply go onto the options page, set your username, password and list and then you can add tasks with a click of a button - simple!
+
+From version 1.2, the extension also shows the number of active tasks you have on your Taskforce account as a badge on the toolbar icon - simple and effective!"
+
 
 **This extension is open source, allowing those interested in the [Taskforce API](http://www.taskforceapp.com/api) to learn about how the API works, and how it can be used in a browser extension for Chrome.**
 
