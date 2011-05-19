@@ -5,8 +5,21 @@
 	
 		<script type="text/javascript" src="jquery.js"></script>
 		<script type="text/javascript">
+		
+		setInterval(function(localStorage) {
+			username = window.localStorage.getItem("tf_username");
+			password = window.localStorage.getItem("tf_apikey");
+			if (username != undefined && password != undefined) {
+				$.getJSON("https://" + username + ":" + password + "@www.taskforceapp.com/api/v1/tasks/count.json", null, function(data, textStatus, jqXHR) {
+				var options = { "color": [255, 0, 0, 80] };
+				chrome.browserAction.setBadgeBackgroundColor(options);
+				var options = { "text": data.task_counts.active.toString() };
+				chrome.browserAction.setBadgeText(options);
 			
-			chrome.browserAction.onClicked.addListener(function(tab) {
+		}); }
+		}, 60000);
+		
+		chrome.browserAction.onClicked.addListener(function(tab) {
 		url = tab.url;
 		username = localStorage.getItem("tf_username");
 		password = localStorage.getItem("tf_apikey");
