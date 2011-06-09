@@ -21,6 +21,7 @@
 		
 		chrome.browserAction.onClicked.addListener(function(tab) {
 		url = tab.url;
+		title = tab.title;
 		username = localStorage.getItem("tf_username");
 		password = localStorage.getItem("tf_apikey");
 		list_id = localStorage.getItem("tf_list");
@@ -34,7 +35,8 @@
 			var options = { 'url': 'options.html' }; chrome.tabs.create(options);
 		} else {
 			var data = {
-				'name': url,
+				'name': title,
+				'details': url,
 				'list_id': list_id
 			}
 			request_url = "https://" + username + ":" + password + "@www.taskforceapp.com/api/v1/tasks.json";
